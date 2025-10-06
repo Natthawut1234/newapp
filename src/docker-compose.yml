@@ -1,0 +1,25 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/usr/share/nginx/html
+    restart: always
+  jenkins:
+    image: jenkins/jenkins:lts
+    privileged: true
+    user: root
+    ports:
+      - "8081:8080"  # เปลี่ยนจาก 8080:8080 เป็น 8081:8080
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./src:/home/jenkins/src
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/local/bin/docker
+    restart: unless-stopped
+
+volumes:
+  jenkins_home: {}
